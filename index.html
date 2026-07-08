@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mente Ordenada - Finanzas</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- LOGIN -->
+  <div id="login">
+
+    <div class="login-card">
+
+      <img src="logo.png" alt="Logotipo" class="login-logo">
+
+      <form id="formLogin">
+
+        <h1>Iniciar sesión</h1>
+        <p class="login-texto">Ingresa tus datos para ver tu informe financiero.</p>
+
+        <label for="nombre">Nombre de usuario</label>
+        <input 
+          type="text" 
+          id="nombre" 
+          name="nombreUsuario"
+          placeholder="Escribe tu nombre"
+        >
+
+        <label for="correoelectronico">Correo electrónico</label>
+        <input 
+          type="email" 
+          id="correoelectronico" 
+          name="correoElectronico"
+          placeholder="correo@email.com"
+        >
+
+        <label for="contrasena">Contraseña</label>
+        <input 
+          type="password" 
+          id="contrasena" 
+          name="contrasena"
+          placeholder="Escribe tu contraseña"
+        >
+
+        <button type="submit">Iniciar sesión</button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- SIDEBAR -->
+  <div id="sidebar" class="oculto">
+
+    <ul>
+      <li>
+        <img src="logo.png" alt="Logotipo" class="log">
+      </li>
+
+      <li class="item-menu activo" data-seccion="dashboard">
+        <i class="fa-solid fa-chart-line"></i>
+        Dashboard
+      </li>
+
+      <li class="item-menu" data-seccion="movimientos">
+        <i class="fa-solid fa-money-bill-transfer"></i>
+        Movimientos
+      </li>
+
+      <li class="item-menu" data-seccion="metas">
+        <i class="fa-solid fa-bullseye"></i>
+        Metas Financieras
+      </li>
+
+      <li class="item-menu" data-seccion="presupuesto">
+        <i class="fa-solid fa-wallet"></i>
+        Presupuesto
+      </li>
+
+      <li class="item-menu" data-seccion="reportes">
+        <i class="fa-solid fa-file-lines"></i>
+        Reportes
+      </li>
+
+      <li class="item-menu" data-seccion="configuracion">
+        <i class="fa-solid fa-gear"></i>
+        Configuración
+      </li>
+
+      <li id="btnCerrarSesion" class="cerrar-sesion">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Cerrar sesión
+      </li>
+    </ul>
+
+  </div>
+
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="contenido-principal oculto">
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="seccion activa">
+
+      <section class="bienvenida">
+        <div class="texto">
+          <h1 id="saludoUsuario">¡Hola! 👋</h1>
+          <p>Aquí tienes un resumen de tus finanzas.</p>
+        </div>
+      </section>
+
+      <section class="contenedor-cajas">
+
+        <div class="cajon-flotante" id="uno">
+          <div>
+            <span>Saldo Actual</span>
+            <h3>$ 0</h3>
+            <p>Disponible</p>
+          </div>
+          <i class="fa-solid fa-wallet"></i>
+        </div>
+
+        <div class="cajon-flotante" id="dos">
+          <div>
+            <span>Ingresos</span>
+            <h3>$ 0</h3>
+            <p>Este mes</p>
+          </div>
+          <i class="fa-solid fa-arrow-up"></i>
+        </div>
+
+        <div class="cajon-flotante" id="tres">
+          <div>
+            <span>Gastos</span>
+            <h3>$ 0</h3>
+            <p>Este mes</p>
+          </div>
+          <i class="fa-solid fa-arrow-down"></i>
+        </div>
+
+        <div class="cajon-flotante" id="cuatro">
+          <div>
+            <span>Ahorro del Mes</span>
+            <h3>$ 0</h3>
+            <p>0% de tus ingresos</p>
+          </div>
+          <i class="fa-solid fa-piggy-bank"></i>
+        </div>
+
+      </section>
+
+      <section class="fila-superior-dashboard">
+
+        <div class="seccion-grafica">
+          <h2>Ingresos vs Gastos</h2>
+
+          <div class="micanvas-container">
+            <canvas id="micanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="mensaje-ahorro" id="mensajeFinanciero">
+          <i class="fa-solid fa-chart-line"></i>
+          <p>Agrega movimientos para ver tu diagnóstico financiero.</p>
+        </div>
+
+      </section>
+
+    </section>
+
+
+    <!-- MOVIMIENTOS -->
+    <section id="movimientos" class="seccion">
+
+      <div class="formulario-movimiento">
+        <h2>Agregar movimiento</h2>
+
+        <form id="formMovimiento">
+
+          <div class="campo">
+            <label for="monto">Monto</label>
+            <input type="number" id="monto" placeholder="Ingresa el monto">
+          </div>
+
+          <div class="campo">
+            <label for="tipo">Tipo de movimiento</label>
+            <select id="tipo">
+              <option value="Ingreso">Ingreso</option>
+              <option value="Gasto">Gasto</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="categoria">Categoría</label>
+            <select id="categoria">
+              <option value="">Selecciona una categoría</option>
+              <option value="Salario">Salario</option>
+              <option value="Comida">Comida</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Servicios">Servicios</option>
+              <option value="Arriendo">Arriendo</option>
+              <option value="Entretenimiento">Entretenimiento</option>
+              <option value="Educación">Educación</option>
+              <option value="Salud">Salud</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="descripcion">Descripción</label>
+            <input type="text" id="descripcion" placeholder="Ej: pago de internet, mercado, salario">
+          </div>
+
+          <div class="campo">
+            <label for="fechaMovimiento">Fecha</label>
+            <input type="date" id="fechaMovimiento">
+          </div>
+
+          <button type="submit">Agregar movimiento</button>
+
+        </form>
+      </div>
+
+      <div class="historial-de-movimientos">
+        <div class="titulo-card">
+          <h3>Movimientos recientes</h3>
+          <button type="button" id="btnLimpiarMovimientos" class="btn-ver-todas">Limpiar</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Categoría</th>
+              <th>Descripción</th>
+              <th>Monto</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+
+          <tbody id="tablamovimientos"></tbody>
+        </table>
+      </div>
+
+    </section>
+
+
+    <!-- METAS FINANCIERAS -->
+    <section id="metas" class="seccion">
+
+      <div class="metas-financieras">
+
+        <div class="titulo-card">
+          <h3>Metas Financieras</h3>
+        </div>
+
+        <form id="formulario-metas">
+          <input type="text" id="nombremeta" placeholder="Nombre de la meta">
+          <input type="number" id="valormeta" placeholder="Valor total">
+          <input type="number" id="valorahorrado" placeholder="Valor ahorrado">
+          <button type="submit">Crear meta</button>
+        </form>
+
+        <div class="listametas" id="listametas"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PRESUPUESTO -->
+    <section id="presupuesto" class="seccion">
+
+      <div class="presupuesto-layout">
+
+        <div class="formulario-presupuesto">
+          <h2>Crear presupuesto</h2>
+          <p>Define cuánto puedes gastar por categoría cada mes.</p>
+
+          <form id="formPresupuesto">
+
+            <div class="campo">
+              <label for="categoriaPresupuesto">Categoría</label>
+              <select id="categoriaPresupuesto">
+                <option value="">Selecciona una categoría</option>
+                <option value="Comida">Comida</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Servicios">Servicios</option>
+                <option value="Arriendo">Arriendo</option>
+                <option value="Entretenimiento">Entretenimiento</option>
+                <option value="Educación">Educación</option>
+                <option value="Salud">Salud</option>
+                <option value="Otros">Otros</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="montoPresupuesto">Valor presupuestado</label>
+              <input type="number" id="montoPresupuesto" placeholder="Ej: 500000">
+            </div>
+
+            <div class="campo">
+              <label for="mesPresupuesto">Mes</label>
+              <input type="month" id="mesPresupuesto">
+            </div>
+
+            <button type="submit">Guardar presupuesto</button>
+
+          </form>
+        </div>
+
+        <div class="lista-presupuestos-card">
+          <div class="titulo-card">
+            <h3>Presupuestos del mes</h3>
+          </div>
+
+          <div id="listaPresupuestos"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- REPORTES -->
+    <section id="reportes" class="seccion">
+
+      <div class="card-seccion">
+        <h2>Reportes</h2>
+        <p>Resumen por categorías según tus movimientos registrados.</p>
+
+        <div id="contenedorReportes"></div>
+      </div>
+
+    </section>
+
+
+    <!-- CONFIGURACIÓN -->
+    <section id="configuracion" class="seccion">
+
+      <div class="card-seccion">
+        <h2>Configuración</h2>
+        <p id="datosUsuarioConfig">Usuario activo.</p>
+
+        <button id="btnCerrarSesionConfig" class="btn-cerrar-config">
+          Cerrar sesión
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
