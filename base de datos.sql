@@ -9,7 +9,6 @@ USE app_finanzas;
 -- =====================================================
 -- TABLA: USUARIOS
 -- =====================================================
--- Guarda los usuarios que podrán iniciar sesión en la app.
 
 CREATE TABLE usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
@@ -23,8 +22,6 @@ CREATE TABLE usuarios (
 -- =====================================================
 -- TABLA: CATEGORIAS
 -- =====================================================
--- Clasifica ingresos y gastos.
--- Ejemplo: Salario = Ingreso, Comida = Gasto.
 
 CREATE TABLE categorias (
     id_categoria INT AUTO_INCREMENT PRIMARY KEY,
@@ -37,7 +34,6 @@ CREATE TABLE categorias (
 -- =====================================================
 -- TABLA: MOVIMIENTOS
 -- =====================================================
--- Guarda ingresos y gastos de cada usuario.
 
 CREATE TABLE movimientos (
     id_movimiento INT AUTO_INCREMENT PRIMARY KEY,
@@ -68,8 +64,6 @@ CREATE TABLE movimientos (
 -- =====================================================
 -- TABLA: METAS FINANCIERAS
 -- =====================================================
--- Guarda objetivos financieros del usuario.
--- Ejemplo: Comprar moto, ahorrar para viaje, fondo de emergencia.
 
 CREATE TABLE metas_financieras (
     id_meta INT AUTO_INCREMENT PRIMARY KEY,
@@ -101,8 +95,6 @@ CREATE TABLE metas_financieras (
 -- =====================================================
 -- TABLA: ABONOS A METAS
 -- =====================================================
--- Registra cada abono hecho a una meta.
--- Esto es mejor que solo actualizar el monto_actual, porque deja historial.
 
 CREATE TABLE abonos_metas (
     id_abono INT AUTO_INCREMENT PRIMARY KEY,
@@ -125,7 +117,6 @@ CREATE TABLE abonos_metas (
 -- =====================================================
 -- TABLA: PRESUPUESTOS
 -- =====================================================
--- Define límites de gasto por usuario, categoría y periodo.
 
 CREATE TABLE presupuestos (
     id_presupuesto INT AUTO_INCREMENT PRIMARY KEY,
@@ -160,20 +151,23 @@ CREATE TABLE presupuestos (
 -- =====================================================
 -- ÍNDICES
 -- =====================================================
--- Ayudan a que las búsquedas sean más rápidas.
--- Esto es buena práctica. La app no se arrastra como computador con 40 pestañas.
+
+CREATE INDEX idx_usuarios_correo ON usuarios(correo);
 
 CREATE INDEX idx_movimientos_usuario ON movimientos(id_usuario);
 CREATE INDEX idx_movimientos_categoria ON movimientos(id_categoria);
 CREATE INDEX idx_movimientos_fecha ON movimientos(fecha);
 
 CREATE INDEX idx_metas_usuario ON metas_financieras(id_usuario);
+
+CREATE INDEX idx_abonos_meta ON abonos_metas(id_meta);
+
 CREATE INDEX idx_presupuestos_usuario ON presupuestos(id_usuario);
 CREATE INDEX idx_presupuestos_categoria ON presupuestos(id_categoria);
 CREATE INDEX idx_presupuestos_fechas ON presupuestos(fecha_inicio, fecha_fin);
 
 -- =====================================================
--- DATOS INICIALES: CATEGORÍAS
+-- DATOS INICIALES: CATEGORIAS
 -- =====================================================
 
 INSERT INTO categorias (nombre_categoria, tipo_categoria, descripcion)
@@ -197,12 +191,12 @@ VALUES
 -- =====================================================
 -- USUARIO DE PRUEBA
 -- =====================================================
--- Para probar login:
--- correo: alejandro@gmail.com
--- contraseña: 1234
+-- Correo: alejandro@gmail.com
+-- Contraseña: 1234
 
 INSERT INTO usuarios (nombre, correo, contrasena)
-VALUES ('Alejandro', 'alejandro@gmail.com', '1234');
+VALUES 
+('Alejandro', 'alejandro@gmail.com', '1234');
 
 -- =====================================================
 -- MOVIMIENTOS DE PRUEBA
@@ -214,16 +208,26 @@ VALUES
 (1, 1, CURDATE(), 'Ingreso', 'Pago de salario mensual', 2800000),
 (1, 5, CURDATE(), 'Gasto', 'Compra de mercado', 250000),
 (1, 6, CURDATE(), 'Gasto', 'Transporte semanal', 80000),
-(1, 7, CURDATE(), 'Gasto', 'Pago de internet', 120000);
+(1, 7, CURDATE(), 'Gasto', 'Pago de internet', 120000),
+(1, 9, CURDATE(), 'Gasto', 'Salida de entretenimiento', 90000);
 
 -- =====================================================
--- META DE PRUEBA
+-- META FINANCIERA DE PRUEBA
 -- =====================================================
 
 INSERT INTO metas_financieras 
 (id_usuario, nombre_meta, monto_objetivo, monto_actual, fecha_inicio, fecha_limite, estado)
 VALUES
 (1, 'Fondo de emergencia', 3000000, 500000, CURDATE(), '2026-12-31', 'Activa');
+
+-- =====================================================
+-- ABONOS DE PRUEBA
+-- =====================================================
+
+INSERT INTO abonos_metas
+(id_meta, fecha_abono, monto_abono, descripcion)
+VALUES
+(1, CURDATE(), 500000, 'Primer abono al fondo de emergencia');
 
 -- =====================================================
 -- PRESUPUESTOS DE PRUEBA
@@ -234,12 +238,12 @@ INSERT INTO presupuestos
 VALUES
 (1, 5, 600000, 'Mensual', DATE_FORMAT(CURDATE(), '%Y-%m-01'), LAST_DAY(CURDATE())),
 (1, 6, 250000, 'Mensual', DATE_FORMAT(CURDATE(), '%Y-%m-01'), LAST_DAY(CURDATE())),
-(1, 7, 300000, 'Mensual', DATE_FORMAT(CURDATE(), '%Y-%m-01'), LAST_DAY(CURDATE()));
+(1, 7, 300000, 'Mensual', DATE_FORMAT(CURDATE(), '%Y-%m-01'), LAST_DAY(CURDATE())),
+(1, 9, 200000, 'Mensual', DATE_FORMAT(CURDATE(), '%Y-%m-01'), LAST_DAY(CURDATE()));
 
 -- =====================================================
 -- VISTA: RESUMEN FINANCIERO POR USUARIO
 -- =====================================================
--- Sirve para dashboard: ingresos, gastos y saldo.
 
 CREATE VIEW vista_resumen_usuario AS
 SELECT 
@@ -251,36 +255,69 @@ SELECT
     COALESCE(SUM(CASE WHEN m.tipo_movimiento = 'Ingreso' THEN m.monto ELSE 0 END), 0) -
     COALESCE(SUM(CASE WHEN m.tipo_movimiento = 'Gasto' THEN m.monto ELSE 0 END), 0) AS saldo_actual
 FROM usuarios u
-LEFT JOIN movimientos m ON u.id_usuario = m.id_usuario
-GROUP BY u.id_usuario, u.nombre, u.correo;
+LEFT JOIN movimientos m 
+    ON u.id_usuario = m.id_usuario
+GROUP BY 
+    u.id_usuario,
+    u.nombre,
+    u.correo;
 
 -- =====================================================
--- VISTA: GASTOS POR CATEGORÍA
+-- VISTA: RESUMEN DEL MES POR USUARIO
 -- =====================================================
--- Sirve para reportes.
+
+CREATE VIEW vista_resumen_mes_usuario AS
+SELECT 
+    u.id_usuario,
+    u.nombre,
+    u.correo,
+    DATE_FORMAT(m.fecha, '%Y-%m') AS mes,
+    COALESCE(SUM(CASE WHEN m.tipo_movimiento = 'Ingreso' THEN m.monto ELSE 0 END), 0) AS ingresos_mes,
+    COALESCE(SUM(CASE WHEN m.tipo_movimiento = 'Gasto' THEN m.monto ELSE 0 END), 0) AS gastos_mes,
+    COALESCE(SUM(CASE WHEN m.tipo_movimiento = 'Ingreso' THEN m.monto ELSE 0 END), 0) -
+    COALESCE(SUM(CASE WHEN m.tipo_movimiento = 'Gasto' THEN m.monto ELSE 0 END), 0) AS ahorro_mes
+FROM usuarios u
+LEFT JOIN movimientos m 
+    ON u.id_usuario = m.id_usuario
+GROUP BY 
+    u.id_usuario,
+    u.nombre,
+    u.correo,
+    DATE_FORMAT(m.fecha, '%Y-%m');
+
+-- =====================================================
+-- VISTA: GASTOS POR CATEGORIA
+-- =====================================================
 
 CREATE VIEW vista_gastos_por_categoria AS
 SELECT
     u.id_usuario,
-    u.nombre,
+    u.nombre AS usuario,
+    c.id_categoria,
     c.nombre_categoria,
     SUM(m.monto) AS total_gastado
 FROM movimientos m
-INNER JOIN usuarios u ON m.id_usuario = u.id_usuario
-INNER JOIN categorias c ON m.id_categoria = c.id_categoria
+INNER JOIN usuarios u 
+    ON m.id_usuario = u.id_usuario
+INNER JOIN categorias c 
+    ON m.id_categoria = c.id_categoria
 WHERE m.tipo_movimiento = 'Gasto'
-GROUP BY u.id_usuario, u.nombre, c.nombre_categoria;
+GROUP BY 
+    u.id_usuario,
+    u.nombre,
+    c.id_categoria,
+    c.nombre_categoria;
 
 -- =====================================================
 -- VISTA: ESTADO DE PRESUPUESTOS
 -- =====================================================
--- Compara presupuesto contra gasto real.
 
 CREATE VIEW vista_estado_presupuestos AS
 SELECT
     p.id_presupuesto,
     u.id_usuario,
     u.nombre AS usuario,
+    c.id_categoria,
     c.nombre_categoria,
     p.monto_limite,
     p.periodo,
@@ -290,8 +327,10 @@ SELECT
     p.monto_limite - COALESCE(SUM(m.monto), 0) AS disponible,
     ROUND((COALESCE(SUM(m.monto), 0) / p.monto_limite) * 100, 2) AS porcentaje_usado
 FROM presupuestos p
-INNER JOIN usuarios u ON p.id_usuario = u.id_usuario
-INNER JOIN categorias c ON p.id_categoria = c.id_categoria
+INNER JOIN usuarios u 
+    ON p.id_usuario = u.id_usuario
+INNER JOIN categorias c 
+    ON p.id_categoria = c.id_categoria
 LEFT JOIN movimientos m 
     ON m.id_usuario = p.id_usuario
     AND m.id_categoria = p.id_categoria
@@ -301,6 +340,7 @@ GROUP BY
     p.id_presupuesto,
     u.id_usuario,
     u.nombre,
+    c.id_categoria,
     c.nombre_categoria,
     p.monto_limite,
     p.periodo,
@@ -317,7 +357,15 @@ SELECT * FROM usuarios;
 
 SELECT * FROM categorias;
 
+SELECT * FROM movimientos;
+
+SELECT * FROM metas_financieras;
+
+SELECT * FROM presupuestos;
+
 SELECT * FROM vista_resumen_usuario;
+
+SELECT * FROM vista_resumen_mes_usuario;
 
 SELECT * FROM vista_gastos_por_categoria;
 
