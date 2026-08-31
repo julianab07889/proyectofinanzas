@@ -67,9 +67,3 @@ El proyecto está organizado en diferentes componentes:
 * NetBeans
 * Git
 * GitHub
-
-## Evidencia
-
-**GA7-220501096-AA2-EV02 – Módulos de software codificados y probados**
-
-El módulo desarrollado permite demostrar el uso de formularios web, Servlets, métodos GET y POST, páginas JSP y conexión con una base de datos MySQL.
