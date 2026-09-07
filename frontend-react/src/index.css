@@ -1,0 +1,17 @@
+/*Estilos generales de la apalicacion*/
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body{
+  font-family:Arial, Helvetica, sans-serif;
+  background-color: #fff5fb;
+  color: #111111;
+}
+
+button,
+input {
+  font-family:inherit;
+
+}

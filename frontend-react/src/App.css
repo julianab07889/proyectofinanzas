@@ -1,0 +1,312 @@
+/* ==============================
+   ESTILOS GENERALES
+   ============================== */
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+
+/* ==============================
+   LOGIN
+   ============================== */
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff5fb;
+  padding: 30px;
+}
+
+.login-tarjeta {
+  width: 100%;
+  max-width: 520px;
+  background-color: #ffffff;
+  padding: 50px 40px;
+  border: 1px solid #ead8e8;
+  border-radius: 25px;
+}
+
+.login-tarjeta h1 {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 14px;
+}
+
+.login-tarjeta > p {
+  text-align: center;
+  color: #555;
+  font-size: 18px;
+  margin-bottom: 35px;
+}
+
+.campo-formulario {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 22px;
+}
+
+.campo-formulario label {
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.campo-formulario input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #d9cddd;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+.login-tarjeta button {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  background-color: #972ded;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+/* ==============================
+   DASHBOARD
+   ============================== */
+
+.dashboard {
+  min-height: 100vh;
+  display: flex;
+  background-color: #fff5fb;
+  color: #111;
+}
+
+
+/* Menú lateral */
+
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background-color: white;
+  padding: 35px 20px;
+  border-right: 1px solid #ead8e8;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background-color: transparent;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.sidebar button:hover {
+  background-color: #f1d7ff;
+  color: #831bd1;
+}
+
+
+/* Contenido */
+
+.dashboard-contenido {
+  flex: 1;
+  padding: 40px;
+}
+
+.dashboard-header {
+  margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+  font-size: 34px;
+  margin-bottom: 8px;
+}
+
+.dashboard-header p {
+  color: #555;
+  font-size: 18px;
+}
+
+
+/* Tarjetas */
+
+.tarjetas-financieras {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.tarjeta-financiera {
+  background-color: white;
+  padding: 25px;
+  border: 1px solid #ead8e8;
+  border-radius: 18px;
+}
+
+.tarjeta-financiera h3 {
+  margin-bottom: 15px;
+}
+
+.tarjeta-financiera strong {
+  display: block;
+  font-size: 25px;
+  color: #972ded;
+  margin-bottom: 8px;
+}
+
+.tarjeta-financiera p {
+  color: #555;
+}
+
+
+/* Parte inferior */
+
+.resumen-financiero {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+}
+
+.grafica-placeholder {
+  min-height: 300px;
+  background-color: white;
+  border: 1px solid #ead8e8;
+  border-radius: 18px;
+  padding: 30px;
+}
+
+.mensaje-financiero {
+  background-color: #e8f8ef;
+  color: #087830;
+  border-radius: 18px;
+  padding: 30px;
+}
+
+
+/* Adaptación para pantallas pequeñas */
+
+@media (max-width: 1000px) {
+  .tarjetas-financieras {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .resumen-financiero {
+    grid-template-columns: 1fr;
+  }
+}
+/* ==============================
+   METAS FINANCIERAS
+   ============================== */
+
+.form-meta {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 12px;
+  margin-top: 30px;
+  margin-bottom: 35px;
+}
+
+.form-meta input {
+  padding: 14px;
+  border: 1px solid #d9cddd;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.form-meta button {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: #972ded;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.meta-item {
+  padding: 18px;
+  margin-top: 12px;
+  background-color: #fff5fb;
+  border-radius: 12px;
+}
+
+.meta-item h3 {
+  margin-bottom: 10px;
+}
+
+.meta-item p {
+  margin-bottom: 6px;
+}
+
+/* ==============================
+   PRESUPUESTO
+   ============================== */
+
+.form-presupuesto {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 12px;
+  margin-top: 30px;
+  margin-bottom: 35px;
+}
+
+.form-presupuesto input {
+  padding: 14px;
+  border: 1px solid #d9cddd;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.form-presupuesto button {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: #972ded;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.presupuesto-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  margin-top: 12px;
+  background-color: #fff5fb;
+  border-radius: 12px;
+}
+
+.presupuesto-item h3 {
+  margin-bottom: 6px;
+}
+
+.presupuesto-item strong {
+  color: #972ded;
+  font-size: 20px;
+}
